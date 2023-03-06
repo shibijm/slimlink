@@ -1,31 +1,39 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"path"
-	"slimlink/services/api"
+	"slimlink/core/ports"
 	"strings"
 )
 
-func ServeContentHandler(w http.ResponseWriter, r *http.Request) {
+type WebUIController struct {
+	logger         ports.Logger
+	httpFileSystem ports.HttpFileSystem
+}
+
+func NewWebUIController(logger ports.Logger, httpFileSystem ports.HttpFileSystem) *WebUIController {
+	return &WebUIController{logger, httpFileSystem}
+}
+
+func (webUIController *WebUIController) ServeContent(w http.ResponseWriter, r *http.Request) {
 	cleanedPath := path.Clean(r.URL.Path)
-	file, is404 := api.GetFile(cleanedPath)
-	if is404 {
+	file, err := webUIController.httpFileSystem.GetFile(cleanedPath)
+	if err != nil {
 		urlPathSplit := strings.Split(r.URL.Path, "/")[1:]
 		if len(urlPathSplit) == 1 {
 			r.URL.Path = "/api/links/" + urlPathSplit[0] + "/redirect"
-			RedirectToLinkUrlHandler(w, r)
+			return
+		}
+		file, err = webUIController.httpFileSystem.GetFile("/404.html")
+		if err != nil {
+			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 	}
-	if file == nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
 	fileInfo, err := file.Stat()
 	if err != nil {
-		fmt.Println(err)
+		webUIController.logger.LogError(err, "WebUIController.ServeContent")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

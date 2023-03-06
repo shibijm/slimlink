@@ -7,58 +7,63 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"slimlink/services/api"
-	"slimlink/services/data"
-	"slimlink/services/routers"
-	"strconv"
+	"slimlink/config"
+	"slimlink/core/ports"
+	"slimlink/core/services"
+	"slimlink/infrastructure/data"
+	"slimlink/infrastructure/logging"
+	"slimlink/infrastructure/repos"
+	"slimlink/interface/controllers"
+	"slimlink/interface/routers"
 
-	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 )
 
 //go:embed all:web/out
-var embeddedFS embed.FS
+var embeddedWebUIFileSystem embed.FS
+var consoleLogger ports.Logger
 
 func main() {
-	godotenv.Load()
-	bindAddress := os.Getenv("BIND_ADDRESS")
-	if bindAddress == "" {
-		bindAddress = "127.0.0.1"
-	}
-	bindPort := os.Getenv("BIND_PORT")
-	if bindPort == "" {
-		bindPort = "44558"
-	}
-	address := fmt.Sprintf("%s:%s", bindAddress, bindPort)
-	fmt.Printf("Slimlink\nURL: http://%s\n", address)
-	options, err := redis.ParseURL(os.Getenv("REDIS_CONNECTION_STRING"))
+	config.Load()
+	consoleLogger = logging.NewConsoleLogger()
+	address := fmt.Sprintf("%s:%s", config.BindAddress, config.BindPort)
+	consoleLogger.Log("Slimlink v%s", config.Version)
+	consoleLogger.Log("Bind Address: http://%s", address)
+	options, err := redis.ParseURL(config.RedisConnectionString)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		exitWithError(err, "failed to parse Redis connection string")
 	}
-	data.InitRedisDb(options)
-	uiOutput, err := fs.Sub(embeddedFS, "web/out")
+	redisDB, err := data.NewRedisDB(options)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		exitWithError(err, "failed to initialise Redis")
 	}
-	api.InitContentApi(http.FS(uiOutput))
-	length, err := strconv.Atoi(os.Getenv("LINK_ID_LENGTH"))
+	webUIFileSystem, err := fs.Sub(embeddedWebUIFileSystem, "web/out")
 	if err != nil {
-		length = 5
+		exitWithError(err, "failed to read embedded web UI filesystem")
 	}
-	api.InitLinkApi(length)
-	http.HandleFunc("/", routers.RootRouter)
+	linkRedisRepo := repos.NewLinkRedisRepo(redisDB)
+	httpFileSystem := data.NewHttpFileSystem(http.FS(webUIFileSystem))
+	linkService := services.NewLinkService(linkRedisRepo, config.LinkIDLength)
+	webUIController := controllers.NewWebUIController(consoleLogger, httpFileSystem)
+	linkController := controllers.NewLinkController(consoleLogger, linkService)
+	webUIRouter := routers.NewWebUIRouter(webUIController)
+	apiRouter := routers.NewApiRouter(linkController)
+	rootRouter := routers.NewRootRouter(webUIRouter, apiRouter)
+	http.HandleFunc("/", rootRouter.Route)
 	go func() {
 		err := http.ListenAndServe(address, nil)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			exitWithError(err, "failed to run HTTP server")
 		}
 	}()
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt)
 	<-sig
-	fmt.Println("Received interrupt signal")
-	fmt.Println("Exiting")
+	consoleLogger.Log("Received interrupt signal")
+	consoleLogger.Log("Exiting")
+}
+
+func exitWithError(err error, message string) {
+	consoleLogger.LogError(fmt.Errorf("%s: %w", message, err), "main")
+	os.Exit(1)
 }

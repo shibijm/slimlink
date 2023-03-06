@@ -16,7 +16,7 @@ You can download a build from the [releases](https://github.com/shibijm/slimlink
 
 * `BIND_ADDRESS` (default: `127.0.0.1`)
 * `BIND_PORT` (default: `44558`)
-* `LINK_ID_LENGTH` (default: `5`) - Length of each random Base62 string which gets generated for use in shortened URLs. 916.13 million (62<sup>5</sup>) possibilities when set to 5.
-* `REDIS_CONNECTION_STRING` (format: `redis://username:password@host:port`)
+* `LINK_ID_LENGTH` (default: `5`) - Length of each random Base62 string which gets generated for use in shortened URLs. 916 million (62<sup>5</sup>) possibilities when set to 5.
+* `REDIS_CONNECTION_STRING` (format: `rediss://username:password@host:port`)
 
 Environment variables will be automatically loaded from a `.env` file if one exists in the program's working directory.

@@ -2,11 +2,19 @@ package routers
 
 import (
 	"net/http"
-	"slimlink/services/controllers"
+	"slimlink/interface/controllers"
 	"strings"
 )
 
-func ApiRouter(w http.ResponseWriter, r *http.Request) {
+type ApiRouter struct {
+	linkController *controllers.LinkController
+}
+
+func NewApiRouter(linkController *controllers.LinkController) *ApiRouter {
+	return &ApiRouter{linkController}
+}
+
+func (apiRouter *ApiRouter) Route(w http.ResponseWriter, r *http.Request) {
 	urlPathSplit := strings.Split(r.URL.Path, "/")[1:]
 	n := len(urlPathSplit)
 	if n > 1 && urlPathSplit[1] == "links" {
@@ -15,7 +23,7 @@ func ApiRouter(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusMethodNotAllowed)
 				return
 			}
-			controllers.AddLinkHandler(w, r)
+			apiRouter.linkController.AddLink(w, r)
 			return
 		}
 		if n == 3 {
@@ -23,15 +31,15 @@ func ApiRouter(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusMethodNotAllowed)
 				return
 			}
-			controllers.GetLinkHandler(w, r)
+			apiRouter.linkController.GetLink(w, r)
 			return
 		}
 		if n == 4 && urlPathSplit[3] == "redirect" {
-			if r.Method != http.MethodGet && r.Method != http.MethodHead {
+			if r.Method != http.MethodGet {
 				w.WriteHeader(http.StatusMethodNotAllowed)
 				return
 			}
-			controllers.RedirectToLinkUrlHandler(w, r)
+			apiRouter.linkController.RedirectToLinkUrl(w, r)
 			return
 		}
 	}
