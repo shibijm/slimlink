@@ -3,7 +3,8 @@ import { AboutButton } from "components";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Fragment } from "react";
-import { globalStyles, lightTheme } from "styles";
+import { globalStyles } from "styles/global";
+import { lightTheme } from "styles/themes";
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
 	return (

@@ -2,7 +2,7 @@ const nextConfig = {
 	reactStrictMode: true,
 	rewrites: () => [
 		{
-			source: "/:path((?!api/).*)",
+			source: "/:path",
 			destination: "/api/links/:path/redirect",
 		},
 	],

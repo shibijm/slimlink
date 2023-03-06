@@ -6,7 +6,7 @@ import logo from "assets/logo.svg";
 import { PageHeader } from "components";
 import { useControlledInput, useDebouncedValue, useDelayedLoading, useMountEffect } from "hooks";
 import { Fragment, useEffect, useState } from "react";
-import { addLink } from "services/client/api/link";
+import { addLink } from "services/link";
 import { isValidUrl } from "utils/url";
 import ResultAlert from "./ResultAlert";
 
@@ -39,15 +39,15 @@ export default function MainView(): JSX.Element {
 		setLoading(true);
 		setShowResultAlert(false);
 		setUrlFieldError("");
-		addLink({ url: url.value })
+		addLink(url.value)
 			.then((link) => {
 				setLastUrl(link.url);
 				setShortenedUrl(`${window.location.origin}/${link.id}`);
 				setError("");
 			})
-			.catch((response) => {
+			.catch((error) => {
 				setShortenedUrl("");
-				setError(response.error.message);
+				setError(error.message);
 			})
 			.finally(() => {
 				setShowResultAlert(true);

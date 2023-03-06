@@ -1,1 +1,1 @@
-export { addLinkHandler as default } from "services/server/controllers/link";
+export { addLinkHandler as default } from "server/controllers/link";

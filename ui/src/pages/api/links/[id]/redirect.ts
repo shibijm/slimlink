@@ -1,1 +1,1 @@
-export { redirectToLinkUrlHandler as default } from "services/server/controllers/link";
+export { redirectToLinkUrlHandler as default } from "server/controllers/link";
