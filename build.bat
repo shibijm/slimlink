@@ -1,6 +1,6 @@
 @echo off
 if not "%1"=="1" (
-	cd ui
+	cd web
 	call npm i
 	call npx next build
 	call npx next export

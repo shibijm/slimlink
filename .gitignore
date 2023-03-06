@@ -1,6 +1,4 @@
 .env
-slimlink
-slimlink.exe
-ui/.next
-ui/node_modules
-ui/out
+.next
+node_modules
+out

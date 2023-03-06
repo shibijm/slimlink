@@ -16,7 +16,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-//go:embed all:ui/out
+//go:embed all:web/out
 var embeddedFS embed.FS
 
 func main() {
@@ -37,7 +37,7 @@ func main() {
 		os.Exit(1)
 	}
 	data.InitRedisDb(options)
-	uiOutput, err := fs.Sub(embeddedFS, "ui/out")
+	uiOutput, err := fs.Sub(embeddedFS, "web/out")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
