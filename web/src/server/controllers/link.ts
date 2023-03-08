@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { BadRequestError, NotFoundError } from "server/exceptions";
-import logError from "server/logging/console";
+import { logError } from "server/logging/console";
 import { addLink, getLinkByID } from "server/services/link";
 import { Link } from "types";
 

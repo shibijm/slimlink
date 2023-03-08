@@ -31,8 +31,7 @@ func (linkService *LinkService) AddLink(url string) (*entities.Link, error) {
 			return nil, err
 		}
 		if attempt == 10 {
-			err := exceptions.NewAppError[*exceptions.UnexpectedError]("maximum tries exceeded for link ID generation")
-			return nil, err
+			return nil, exceptions.NewAppError[*exceptions.UnexpectedError]("maximum tries exceeded for link ID generation")
 		}
 	}
 	link := &entities.Link{ID: id, Url: url}

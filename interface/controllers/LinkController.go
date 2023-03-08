@@ -20,7 +20,7 @@ func NewLinkController(logger ports.Logger, linkService ports.LinkService) *Link
 }
 
 func (linkController *LinkController) AddLink(w http.ResponseWriter, r *http.Request) {
-	var addLinkRequestDTO *dto.AddLinkRequestDTO
+	var addLinkRequestDTO *dto.AddLinkRequestDto
 	err := json.NewDecoder(r.Body).Decode(&addLinkRequestDTO)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

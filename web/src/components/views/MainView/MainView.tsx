@@ -7,7 +7,7 @@ import { PageHeader } from "components";
 import { useControlledInput, useDebouncedValue, useDelayedLoading, useMountEffect } from "hooks";
 import { Fragment, useEffect, useState } from "react";
 import { addLink } from "services/link";
-import { isValidUrl } from "utils/url";
+import { isValidUrl } from "utils";
 import ResultAlert from "./ResultAlert";
 
 export default function MainView(): JSX.Element {

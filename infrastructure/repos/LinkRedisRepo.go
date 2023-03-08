@@ -1,7 +1,6 @@
 package repos
 
 import (
-	"errors"
 	"slimlink/core/entities"
 	"slimlink/core/exceptions"
 	"slimlink/core/ports"
@@ -25,7 +24,7 @@ func (linkRedisRepo *LinkRedisRepo) Add(link *entities.Link) error {
 func (linkRedisRepo *LinkRedisRepo) GetByID(id string) (*entities.Link, error) {
 	url, err := linkRedisRepo.redisDB.Get(id)
 	if err != nil {
-		if errors.Is(err, redis.Nil) {
+		if err == redis.Nil {
 			return nil, exceptions.NewAppError[*exceptions.NotFoundError]("key does not exist")
 		}
 		return nil, err

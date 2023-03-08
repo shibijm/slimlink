@@ -10,6 +10,7 @@ import (
 var BindAddress string
 var BindPort string
 var RedisConnectionString string
+var MySqlConnectionString string
 var LinkIDLength int
 
 func Load() {
@@ -22,10 +23,16 @@ func Load() {
 	if BindPort == "" {
 		BindPort = "44558"
 	}
-	RedisConnectionString = os.Getenv("REDIS_CONNECTION_STRING")
-	var err error
-	LinkIDLength, err = strconv.Atoi(os.Getenv("LINK_ID_LENGTH"))
-	if LinkIDLength < 1 || err != nil {
+	linkIDLength := os.Getenv("LINK_ID_LENGTH")
+	if linkIDLength == "" {
 		LinkIDLength = 5
+	} else {
+		var err error
+		LinkIDLength, err = strconv.Atoi(linkIDLength)
+		if err != nil || LinkIDLength < 1 || LinkIDLength > 64 {
+			LinkIDLength = 0
+		}
 	}
+	RedisConnectionString = os.Getenv("REDIS_CONNECTION_STRING")
+	MySqlConnectionString = os.Getenv("MYSQL_CONNECTION_STRING")
 }

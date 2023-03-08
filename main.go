@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"errors"
 	"fmt"
 	"io/fs"
 	"net/http"
@@ -29,21 +30,42 @@ func main() {
 	address := fmt.Sprintf("%s:%s", config.BindAddress, config.BindPort)
 	consoleLogger.Log("Slimlink v%s", config.Version)
 	consoleLogger.Log("Bind Address: http://%s", address)
-	options, err := redis.ParseURL(config.RedisConnectionString)
-	if err != nil {
-		exitWithError(err, "failed to parse Redis connection string")
+	if config.RedisConnectionString == "" && config.MySqlConnectionString == "" {
+		exitWithError(nil, "no database connection string is set")
 	}
-	redisDB, err := data.NewRedisDB(options)
-	if err != nil {
-		exitWithError(err, "failed to initialise Redis")
+	if config.RedisConnectionString != "" && config.MySqlConnectionString != "" {
+		exitWithError(nil, "multiple database connection strings are set")
+	}
+	var linkRepo ports.LinkRepo
+	if config.RedisConnectionString != "" {
+		options, err := redis.ParseURL(config.RedisConnectionString)
+		if err != nil {
+			exitWithError(err, "failed to parse Redis connection string")
+		}
+		db, err := data.NewRedisDB(options)
+		if err != nil {
+			exitWithError(err, "failed to initialise Redis connection")
+		}
+		linkRepo = repos.NewLinkRedisRepo(db)
+	} else {
+		db, err := data.NewMySqlDB(config.MySqlConnectionString)
+		if err != nil {
+			exitWithError(err, "failed to initialise MySQL connection")
+		}
+		linkRepo, err = repos.NewLinkMySqlRepo(db)
+		if err != nil {
+			exitWithError(err, "failed to initialise link MySQL repo")
+		}
+	}
+	if config.LinkIDLength == 0 {
+		exitWithError(nil, "invalid link ID length")
 	}
 	webUIFileSystem, err := fs.Sub(embeddedWebUIFileSystem, "web/out")
 	if err != nil {
 		exitWithError(err, "failed to read embedded web UI filesystem")
 	}
-	linkRedisRepo := repos.NewLinkRedisRepo(redisDB)
 	httpFileSystem := data.NewHttpFileSystem(http.FS(webUIFileSystem))
-	linkService := services.NewLinkService(linkRedisRepo, config.LinkIDLength)
+	linkService := services.NewLinkService(linkRepo, config.LinkIDLength)
 	webUIController := controllers.NewWebUIController(consoleLogger, httpFileSystem)
 	linkController := controllers.NewLinkController(consoleLogger, linkService)
 	webUIRouter := routers.NewWebUIRouter(webUIController)
@@ -64,6 +86,12 @@ func main() {
 }
 
 func exitWithError(err error, message string) {
-	consoleLogger.LogError(fmt.Errorf("%s: %w", message, err), "main")
+	var errToLog error
+	if err == nil {
+		errToLog = errors.New(message)
+	} else {
+		errToLog = fmt.Errorf("%s: %w", message, err)
+	}
+	consoleLogger.LogError(errToLog, "main")
 	os.Exit(1)
 }

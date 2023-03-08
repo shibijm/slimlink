@@ -1,8 +1,8 @@
 import { getRedisKey, setRedisKey } from "server/data/redisDB";
 import { BadRequestError, NotFoundError, UnexpectedError } from "server/exceptions";
-import { generateBase62String } from "server/utils/base62";
+import { generateBase62String } from "server/utils";
 import { Link } from "types";
-import { isValidUrl } from "utils/url";
+import { isValidUrl } from "utils";
 
 const linkIDLength = (process.env.LINK_ID_LENGTH && parseInt(process.env.LINK_ID_LENGTH)) || 5;
 

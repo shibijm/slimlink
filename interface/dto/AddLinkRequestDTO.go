@@ -1,5 +1,5 @@
 package dto
 
-type AddLinkRequestDTO struct {
+type AddLinkRequestDto struct {
 	Url string `json:"url"`
 }
