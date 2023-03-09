@@ -1,10 +1,9 @@
-import { CssBaseline, GlobalStyles, ThemeProvider } from "@mui/material";
-import { PageFooter } from "components";
+import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider, GlobalStyles } from "@mui/material";
+import { PageFooter, ThemeToggler } from "components";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Fragment } from "react";
-import { globalStyles } from "styles/global";
-import { lightTheme } from "styles/themes";
+import { extendedTheme, globalStyles } from "styles";
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
 	return (
@@ -14,17 +13,18 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 				<meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
 				<meta content="website" property="og:type" />
 				<meta content="Slimlink" property="og:site_name" />
-				{/* <meta content="https://example.com/" property="og:url" /> */}
-				<meta content="https://raw.githubusercontent.com/shibijm/slimlink/master/web/src/assets/logo.svg" property="og:image" />
+				{/* <meta content="https://slimlink.vercel.app/" property="og:url" /> */}
+				<meta content="https://raw.githubusercontent.com/shibijm/slimlink/master/web/public/static/media/logo.png" property="og:image" />
 				<meta content="Logo" name="og:image:alt" />
 				<meta content="summary" name="twitter:card" />
 			</Head>
-			<ThemeProvider theme={lightTheme}>
+			<CssVarsProvider defaultMode="system" theme={extendedTheme}>
 				<CssBaseline />
 				<GlobalStyles styles={globalStyles} />
+				<ThemeToggler />
 				<Component {...pageProps} />
 				<PageFooter />
-			</ThemeProvider>
+			</CssVarsProvider>
 		</Fragment>
 	);
 }

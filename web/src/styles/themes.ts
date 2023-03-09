@@ -1,11 +1,8 @@
-import { createTheme } from "@mui/material";
+import { experimental_extendTheme as extendTheme } from "@mui/material";
 
-export const lightTheme = createTheme({
+const commonTheme = {
 	typography: {
-		fontFamily: ["Inter", "Roboto", "Segoe UI", "Arial", "sans-serif"].join(","),
-	},
-	palette: {
-		mode: "light",
+		fontFamily: "Inter, Roboto, 'Segoe UI', Arial, sans-serif",
 	},
 	components: {
 		MuiButton: {
@@ -16,4 +13,6 @@ export const lightTheme = createTheme({
 			},
 		},
 	},
-});
+};
+
+export const extendedTheme = extendTheme(commonTheme);

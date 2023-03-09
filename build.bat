@@ -1,13 +1,16 @@
 @echo off
-if not "%1"=="1" (
+if not "%1"=="go" (
 	cd web
 	call npm i
 	call npx next build
 	call npx next export
 	cd ..
-	echo.
+)
+if "%1"=="nextjs" (
+	exit /b 0
 )
 setlocal
+set CGO_ENABLED=0
 set GOARCH=amd64
 set GOOS=windows
 echo Building Windows binary...
