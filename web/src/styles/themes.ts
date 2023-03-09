@@ -7,4 +7,13 @@ export const lightTheme = createTheme({
 	palette: {
 		mode: "light",
 	},
+	components: {
+		MuiButton: {
+			styleOverrides: {
+				root: {
+					minWidth: "auto",
+				},
+			},
+		},
+	},
 });

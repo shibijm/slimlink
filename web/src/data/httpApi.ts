@@ -30,3 +30,7 @@ async function apiRequest<T>(method: string, endpoint: string, json?: unknown): 
 export async function apiPost<T>(endpoint: string, json?: unknown): Promise<T> {
 	return await apiRequest("POST", endpoint, json);
 }
+
+export async function apiGet<T>(endpoint: string): Promise<T> {
+	return await apiRequest("GET", endpoint);
+}

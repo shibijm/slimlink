@@ -71,11 +71,13 @@ func main() {
 		exitWithError(err, "failed to read embedded web UI filesystem")
 	}
 	httpFileSystem := data.NewHttpFileSystem(http.FS(webUIFileSystem))
+	infoService := services.NewInfoService(config.PageFooterText)
 	linkService := services.NewLinkService(linkRepo, config.LinkIDLength)
 	webUIController := controllers.NewWebUIController(consoleLogger, httpFileSystem)
+	infoController := controllers.NewInfoController(infoService)
 	linkController := controllers.NewLinkController(consoleLogger, linkService)
 	webUIRouter := routers.NewWebUIRouter(webUIController)
-	apiRouter := routers.NewApiRouter(linkController)
+	apiRouter := routers.NewApiRouter(infoController, linkController)
 	rootRouter := routers.NewRootRouter(webUIRouter, apiRouter)
 	http.HandleFunc("/", rootRouter.Route)
 	go func() {

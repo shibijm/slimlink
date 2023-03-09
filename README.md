@@ -19,6 +19,7 @@ You can download a build from the [releases](https://github.com/shibijm/slimlink
 * `LINK_ID_LENGTH` (default: `5`, min: `1`, max: `64`) - Length of each random Base62 string which gets generated for use in shortened URLs. 916 million (62<sup>5</sup>) possibilities when set to 5.
 * `REDIS_CONNECTION_STRING` (format: `redis://USERNAME:PASSWORD@HOST:PORT`)
 * `MYSQL_CONNECTION_STRING` (format: `USERNAME:PASSWORD@tcp(HOST:PORT)/DATABASE_NAME`)
+* `PAGE_FOOTER_TEXT` (optional) - Text to be displayed at the bottom-left corner of the main page.
 
 Environment variables will be automatically loaded from a `.env` file if one exists in the program's working directory.
 

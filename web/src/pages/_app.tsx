@@ -1,5 +1,5 @@
 import { CssBaseline, GlobalStyles, ThemeProvider } from "@mui/material";
-import { AboutButton } from "components";
+import { PageFooter } from "components";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Fragment } from "react";
@@ -23,7 +23,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 				<CssBaseline />
 				<GlobalStyles styles={globalStyles} />
 				<Component {...pageProps} />
-				<AboutButton />
+				<PageFooter />
 			</ThemeProvider>
 		</Fragment>
 	);

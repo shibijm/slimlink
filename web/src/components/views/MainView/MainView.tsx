@@ -3,7 +3,7 @@ import ShortcutIcon from "@mui/icons-material/Shortcut";
 import { LoadingButton } from "@mui/lab";
 import { IconButton, InputAdornment, Stack, TextField, Typography } from "@mui/material";
 import logo from "assets/logo.svg";
-import { PageHeader } from "components";
+import { PageHead } from "components";
 import { useControlledInput, useDebouncedValue, useDelayedLoading, useMountEffect } from "hooks";
 import { Fragment, useEffect, useState } from "react";
 import { addLink } from "services/link";
@@ -76,7 +76,7 @@ export default function MainView(): JSX.Element {
 
 	return (
 		<Fragment>
-			<PageHeader description="URL shortener" title="Slimlink" />
+			<PageHead description="URL shortener" title="Slimlink" />
 			<Stack alignItems="center" gap={3} height="100%">
 				<Stack alignItems="center" gap={1}>
 					<img alt="Logo" height={32} src={logo.src} width={32} />

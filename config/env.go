@@ -9,9 +9,10 @@ import (
 
 var BindAddress string
 var BindPort string
+var LinkIDLength int
 var RedisConnectionString string
 var MySqlConnectionString string
-var LinkIDLength int
+var PageFooterText string
 
 func Load() {
 	godotenv.Load()
@@ -35,4 +36,5 @@ func Load() {
 	}
 	RedisConnectionString = os.Getenv("REDIS_CONNECTION_STRING")
 	MySqlConnectionString = os.Getenv("MYSQL_CONNECTION_STRING")
+	PageFooterText = os.Getenv("PAGE_FOOTER_TEXT")
 }
