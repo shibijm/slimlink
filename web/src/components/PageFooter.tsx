@@ -1,11 +1,10 @@
-import { Stack, Typography } from "@mui/material";
-import { AboutButton } from "components";
+import { Fade, Typography } from "@mui/material";
 import { useMountEffect } from "hooks";
 import { useState } from "react";
 import { getInfo } from "services/info";
 import { Info } from "types";
 
-export default function PageFooter(): JSX.Element {
+export default function PageFooter(): JSX.Element | null {
 	const [info, setInfo] = useState<Info>();
 
 	useMountEffect(() => {
@@ -16,22 +15,18 @@ export default function PageFooter(): JSX.Element {
 			});
 	});
 
-	return (
-		<Stack
-			alignItems="center"
-			direction="row"
-			gap={3}
-			justifyContent="space-between"
-			sx={{
-				position: "fixed",
-				left: 0,
-				bottom: 0,
-				width: "100%",
-				padding: 3,
-			}}
-		>
-			<Typography>{info?.pageFooterText}</Typography>
-			<AboutButton />
-		</Stack>
-	);
+	return info ? (
+		<Fade in>
+			<Typography
+				sx={{
+					position: "fixed",
+					left: (theme) => theme.spacing(3),
+					bottom: (theme) => theme.spacing(3),
+					width: "100%",
+				}}
+			>
+				{info.pageFooterText}
+			</Typography>
+		</Fade>
+	) : null;
 }

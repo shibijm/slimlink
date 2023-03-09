@@ -1,8 +1,13 @@
 import { experimental_extendTheme as extendTheme } from "@mui/material";
 
-const commonTheme = {
+export const defaultTheme = extendTheme({
 	typography: {
 		fontFamily: "Inter, Roboto, 'Segoe UI', Arial, sans-serif",
+	},
+	transitions: {
+		duration: {
+			enteringScreen: 250,
+		},
 	},
 	components: {
 		MuiButton: {
@@ -13,6 +18,10 @@ const commonTheme = {
 			},
 		},
 	},
-};
+});
 
-export const extendedTheme = extendTheme(commonTheme);
+export const globalStyles = {
+	body: {
+		padding: defaultTheme.spacing(4),
+	},
+};

@@ -1,11 +1,11 @@
 import Head from "next/head";
 
-interface PageHeaderProps {
+interface PageHeadProps {
 	title: string;
 	description: string;
 }
 
-export default function PageHeader({ title, description }: PageHeaderProps): JSX.Element {
+export default function PageHead({ title, description }: PageHeadProps): JSX.Element {
 	return (
 		<Head>
 			<title>{title}</title>

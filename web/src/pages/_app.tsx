@@ -1,9 +1,10 @@
 import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider, GlobalStyles } from "@mui/material";
-import { PageFooter, ThemeToggler } from "components";
+import Fade from "@mui/material/Fade";
+import { PageFooter, PageMenu } from "components";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Fragment } from "react";
-import { extendedTheme, globalStyles } from "styles";
+import { defaultTheme, globalStyles } from "styles";
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
 	return (
@@ -18,11 +19,15 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 				<meta content="Logo" name="og:image:alt" />
 				<meta content="summary" name="twitter:card" />
 			</Head>
-			<CssVarsProvider defaultMode="system" theme={extendedTheme}>
+			<CssVarsProvider defaultMode="system" theme={defaultTheme}>
 				<CssBaseline />
 				<GlobalStyles styles={globalStyles} />
-				<ThemeToggler />
-				<Component {...pageProps} />
+				<PageMenu />
+				<Fade in>
+					<div>
+						<Component {...pageProps} />
+					</div>
+				</Fade>
 				<PageFooter />
 			</CssVarsProvider>
 		</Fragment>
