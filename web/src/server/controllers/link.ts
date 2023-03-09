@@ -9,6 +9,10 @@ export async function addLinkHandler(req: NextApiRequest, res: NextApiResponse):
 		res.status(405).end();
 		return;
 	}
+	if (!req.body.url) {
+		res.status(400).end();
+		return;
+	}
 	let link = null;
 	try {
 		link = await addLink(req.body.url);

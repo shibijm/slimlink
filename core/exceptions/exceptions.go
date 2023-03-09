@@ -2,47 +2,43 @@ package exceptions
 
 import "reflect"
 
-type BaseError struct {
+type baseError struct {
 	message string
 }
 
-func (baseError *BaseError) Error() string {
-	return baseError.message
+func (err *baseError) Error() string {
+	return err.message
 }
 
-func (baseError *BaseError) SetMessage(message string) {
-	baseError.message = message
+func (err *baseError) setMessage(message string) {
+	err.message = message
 }
 
 type BadRequestError struct {
-	BaseError
+	baseError
 }
 
 type NotFoundError struct {
-	BaseError
+	baseError
 }
 
 type UnexpectedError struct {
-	BaseError
+	baseError
 }
 
-type AppError interface {
+type appErrorType interface {
 	error
-	SetMessage(string)
-}
-
-type AppErrorType interface {
-	AppError
+	setMessage(string)
 	*BadRequestError | *NotFoundError | *UnexpectedError
 }
 
-func NewAppError[T AppErrorType](message string) T {
+func NewAppError[T appErrorType](message string) error {
 	err := reflect.New(reflect.TypeOf(new(T)).Elem().Elem()).Interface().(T)
-	err.SetMessage(message)
+	err.setMessage(message)
 	return err
 }
 
-func IsAppError[T AppErrorType](suspect any) bool {
-	_, ok := suspect.(T)
+func IsAppError[T appErrorType](err error) bool {
+	_, ok := err.(T)
 	return ok
 }

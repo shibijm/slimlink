@@ -30,10 +30,13 @@ func main() {
 	address := fmt.Sprintf("%s:%s", config.BindAddress, config.BindPort)
 	consoleLogger.Log("Slimlink v%s", config.Version)
 	consoleLogger.Log("Bind Address: http://%s", address)
-	if config.RedisConnectionString == "" && config.MySqlConnectionString == "" {
+	dbConnectionStrings := []string{config.RedisConnectionString, config.MySqlConnectionString}
+	totalCount := len(dbConnectionStrings)
+	emptyCount := countEmpty(dbConnectionStrings)
+	if emptyCount == totalCount {
 		exitWithError(nil, "no database connection string is set")
 	}
-	if config.RedisConnectionString != "" && config.MySqlConnectionString != "" {
+	if emptyCount < totalCount-1 {
 		exitWithError(nil, "multiple database connection strings are set")
 	}
 	var linkRepo ports.LinkRepo
@@ -46,16 +49,19 @@ func main() {
 		if err != nil {
 			exitWithError(err, "failed to initialise Redis connection")
 		}
+		consoleLogger.Log("Connected to Redis")
 		linkRepo = repos.NewLinkRedisRepo(db)
 	} else {
 		db, err := data.NewMySqlDB(config.MySqlConnectionString)
 		if err != nil {
 			exitWithError(err, "failed to initialise MySQL connection")
 		}
-		linkRepo, err = repos.NewLinkMySqlRepo(db)
+		err = db.EnsureCreated()
 		if err != nil {
-			exitWithError(err, "failed to initialise link MySQL repo")
+			exitWithError(err, "failed to initialise MySQL database")
 		}
+		consoleLogger.Log("Connected to MySQL")
+		linkRepo = repos.NewLinkMySqlRepo(db)
 	}
 	if config.LinkIDLength == 0 {
 		exitWithError(nil, "invalid link ID length")
@@ -94,4 +100,14 @@ func exitWithError(err error, message string) {
 	}
 	consoleLogger.LogError(errToLog, "main")
 	os.Exit(1)
+}
+
+func countEmpty(strings []string) int {
+	emptyCount := 0
+	for _, str := range strings {
+		if str == "" {
+			emptyCount++
+		}
+	}
+	return emptyCount
 }

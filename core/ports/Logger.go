@@ -1,6 +1,6 @@
 package ports
 
 type Logger interface {
-	Log(format string, a ...any)
+	Log(format string, args ...any)
 	LogError(err error, source string)
 }

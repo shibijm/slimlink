@@ -40,7 +40,7 @@ func (linkController *LinkController) AddLink(w http.ResponseWriter, r *http.Req
 	json.NewEncoder(w).Encode(link)
 }
 
-func (linkController *LinkController) RunWithLink(w http.ResponseWriter, r *http.Request, inner func(*entities.Link, error)) {
+func (linkController *LinkController) runWithLink(w http.ResponseWriter, r *http.Request, callback func(*entities.Link, error)) {
 	urlPathSplit := strings.Split(r.URL.Path, "/")[1:]
 	link, err := linkController.linkService.GetLinkByID(urlPathSplit[2])
 	if err != nil {
@@ -50,12 +50,12 @@ func (linkController *LinkController) RunWithLink(w http.ResponseWriter, r *http
 			return
 		}
 	}
-	inner(link, err)
+	callback(link, err)
 }
 
 func (linkController *LinkController) GetLink(w http.ResponseWriter, r *http.Request) {
-	linkController.RunWithLink(w, r, func(link *entities.Link, err error) {
-		if link == nil {
+	linkController.runWithLink(w, r, func(link *entities.Link, err error) {
+		if err != nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
@@ -65,7 +65,7 @@ func (linkController *LinkController) GetLink(w http.ResponseWriter, r *http.Req
 }
 
 func (linkController *LinkController) RedirectToLinkUrl(w http.ResponseWriter, r *http.Request) {
-	linkController.RunWithLink(w, r, func(link *entities.Link, err error) {
+	linkController.runWithLink(w, r, func(link *entities.Link, err error) {
 		if err != nil {
 			http.Redirect(w, r, "/404", http.StatusTemporaryRedirect)
 			return

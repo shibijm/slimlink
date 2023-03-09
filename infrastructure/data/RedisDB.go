@@ -15,8 +15,7 @@ func NewRedisDB(options *redis.Options) (*RedisDB, error) {
 	if err := client.Ping(context.TODO()).Err(); err != nil {
 		return nil, err
 	}
-	redisDB := &RedisDB{client}
-	return redisDB, nil
+	return &RedisDB{client}, nil
 }
 
 func (redisDB *RedisDB) Set(key string, value string) error {

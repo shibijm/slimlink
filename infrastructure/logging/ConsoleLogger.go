@@ -12,9 +12,9 @@ func NewConsoleLogger() ports.Logger {
 	return &ConsoleLogger{}
 }
 
-func (consoleLogger *ConsoleLogger) Log(format string, a ...any) {
+func (consoleLogger *ConsoleLogger) Log(format string, args ...any) {
 	format = fmt.Sprintf("[%s] %s\n", time.Now().Format("2006-01-02T15:04:05"), format)
-	fmt.Printf(format, a...)
+	fmt.Printf(format, args...)
 }
 
 func (consoleLogger *ConsoleLogger) LogError(err error, source string) {

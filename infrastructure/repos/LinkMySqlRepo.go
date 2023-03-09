@@ -12,12 +12,8 @@ type LinkMySqlRepo struct {
 	mySqlDB *data.MySqlDB
 }
 
-func NewLinkMySqlRepo(mySqlDB *data.MySqlDB) (ports.LinkRepo, error) {
-	_, err := mySqlDB.Exec("CREATE TABLE IF NOT EXISTS `links` (`id` VARCHAR(64) NOT NULL, `url` VARCHAR(2048) NOT NULL, PRIMARY KEY (`id`))")
-	if err != nil {
-		return nil, err
-	}
-	return &LinkMySqlRepo{mySqlDB}, nil
+func NewLinkMySqlRepo(mySqlDB *data.MySqlDB) ports.LinkRepo {
+	return &LinkMySqlRepo{mySqlDB}
 }
 
 func (linkMySqlRepo *LinkMySqlRepo) Add(link *entities.Link) error {
