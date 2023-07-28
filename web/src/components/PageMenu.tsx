@@ -64,20 +64,23 @@ export default function PageMenu(): JSX.Element | null {
 				</Tooltip>
 			</Fade>
 			<Menu MenuListProps={{ sx: { width: "220px" } }} anchorEl={pageMenu.anchorElement} onClose={pageMenu.handleClose} open={pageMenu.isOpen}>
-				{isMounted &&
-					Object.entries(themes).map(([theme, { label, icon }]) => (
-						<MenuItem
-							key={theme}
-							onClick={(): void => {
-								setMode(theme as Mode);
-							}}
-						>
-							<ListItemIcon>{icon}</ListItemIcon>
-							<ListItemText>{label}</ListItemText>
-							{mode === theme && <CheckIcon color="primary" />}
-						</MenuItem>
-					))}
-				<Divider />
+				{isMounted && (
+					<Fragment>
+						{Object.entries(themes).map(([theme, { label, icon }]) => (
+							<MenuItem
+								key={theme}
+								onClick={(): void => {
+									setMode(theme as Mode);
+								}}
+							>
+								<ListItemIcon>{icon}</ListItemIcon>
+								<ListItemText>{label}</ListItemText>
+								{mode === theme && <CheckIcon color="primary" />}
+							</MenuItem>
+						))}
+						<Divider />
+					</Fragment>
+				)}
 				<MenuItem
 					onClick={(): void => {
 						aboutDialog.handleOpen();

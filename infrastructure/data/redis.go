@@ -18,10 +18,10 @@ func NewRedisDB(options *redis.Options) (*RedisDB, error) {
 	return &RedisDB{client}, nil
 }
 
-func (redisDB *RedisDB) Set(key string, value string) error {
-	return redisDB.client.Set(context.TODO(), key, value, 0).Err()
+func (db *RedisDB) Set(key string, value string) error {
+	return db.client.Set(context.TODO(), key, value, 0).Err()
 }
 
-func (redisDB *RedisDB) Get(key string) (string, error) {
-	return redisDB.client.Get(context.TODO(), key).Result()
+func (db *RedisDB) Get(key string) (string, error) {
+	return db.client.Get(context.TODO(), key).Result()
 }

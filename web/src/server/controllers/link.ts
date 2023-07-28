@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { BadRequestError, NotFoundError } from "server/exceptions";
 import { logError } from "server/logging/console";
-import { addLink, getLinkByID } from "server/services/link";
+import { createLink, getLinkByID } from "server/services/link";
 import { Link } from "types";
 
 export async function addLinkHandler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
@@ -15,7 +15,7 @@ export async function addLinkHandler(req: NextApiRequest, res: NextApiResponse):
 	}
 	let link = null;
 	try {
-		link = await addLink(req.body.url);
+		link = await createLink(req.body.url);
 	} catch (e) {
 		if (e instanceof BadRequestError) {
 			res.status(400).end();

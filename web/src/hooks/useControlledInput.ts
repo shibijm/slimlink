@@ -32,12 +32,12 @@ function composeControlledInput(value: string, setValue: (value: string) => void
 		setValue,
 		ref,
 		focus: (): void => {
-			if (ref.current !== null) {
+			if (ref.current) {
 				ref.current.focus();
 			}
 		},
 		blur: (): void => {
-			if (ref.current !== null) {
+			if (ref.current) {
 				ref.current.blur();
 			}
 		},

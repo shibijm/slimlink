@@ -8,7 +8,7 @@ Slimlink is a simple and lightweight web service for shortening URLs.
 
 ## Usage
 
-A public instance is hosted at [slimlink.vercel.app](https://slimlink.vercel.app).
+A public instance is hosted at [l.shjm.in](https://l.shjm.in).
 
 You can download a build from the [releases](https://github.com/shibijm/slimlink/releases) page and host your own instance.
 

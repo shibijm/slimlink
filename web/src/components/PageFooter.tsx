@@ -22,7 +22,6 @@ export default function PageFooter(): JSX.Element | null {
 					position: "fixed",
 					left: (theme) => theme.spacing(3),
 					bottom: (theme) => theme.spacing(3),
-					width: "100%",
 				}}
 			>
 				{info.pageFooterText}

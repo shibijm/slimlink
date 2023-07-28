@@ -14,7 +14,7 @@ var RedisConnectionString string
 var MySqlConnectionString string
 var PageFooterText string
 
-func Load() {
+func LoadFromEnv() {
 	godotenv.Load()
 	BindAddress = os.Getenv("BIND_ADDRESS")
 	if BindAddress == "" {

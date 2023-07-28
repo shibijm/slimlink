@@ -1,4 +1,4 @@
-import { getRedisKey, setRedisKey } from "server/data/redisDB";
+import { getRedisKey, setRedisKey } from "server/data/redis";
 import { BadRequestError, NotFoundError, UnexpectedError } from "server/exceptions";
 import { generateBase62String } from "server/utils";
 import { Link } from "types";
@@ -6,7 +6,7 @@ import { isValidUrl } from "utils";
 
 const linkIDLength = (process.env.LINK_ID_LENGTH && parseInt(process.env.LINK_ID_LENGTH)) || 5;
 
-export async function addLink(url: string): Promise<Link> {
+export async function createLink(url: string): Promise<Link> {
 	if (!isValidUrl(url)) {
 		throw new BadRequestError("Invalid URL");
 	}

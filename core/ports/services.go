@@ -2,7 +2,11 @@ package ports
 
 import "slimlink/core/entities"
 
+type InfoService interface {
+	GetInfo() *entities.Info
+}
+
 type LinkService interface {
-	AddLink(url string) (*entities.Link, error)
+	CreateLink(url string) (*entities.Link, error)
 	GetLinkByID(id string) (*entities.Link, error)
 }

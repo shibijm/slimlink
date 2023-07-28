@@ -22,17 +22,20 @@ import (
 
 //go:embed all:web/out
 var embeddedWebUIFileSystem embed.FS
-var consoleLogger ports.Logger
+var logger ports.Logger
 
 func main() {
-	config.Load()
-	consoleLogger = logging.NewConsoleLogger()
+	config.LoadFromEnv()
+	logger = logging.NewConsoleLogger()
+	logger.Log("Slimlink v%s", config.Version)
 	address := fmt.Sprintf("%s:%s", config.BindAddress, config.BindPort)
-	consoleLogger.Log("Slimlink v%s", config.Version)
-	consoleLogger.Log("Bind Address: http://%s", address)
+	logger.Log("Bind Address: http://%s", address)
+	if config.LinkIDLength == 0 {
+		exitWithError(nil, "invalid link ID length")
+	}
 	dbConnectionStrings := []string{config.RedisConnectionString, config.MySqlConnectionString}
-	totalCount := len(dbConnectionStrings)
 	emptyCount := countEmpty(dbConnectionStrings)
+	totalCount := len(dbConnectionStrings)
 	if emptyCount == totalCount {
 		exitWithError(nil, "no database connection string is set")
 	}
@@ -49,7 +52,7 @@ func main() {
 		if err != nil {
 			exitWithError(err, "failed to initialise Redis connection")
 		}
-		consoleLogger.Log("Connected to Redis")
+		logger.Log("Connected to Redis")
 		linkRepo = repos.NewLinkRedisRepo(db)
 	} else {
 		db, err := data.NewMySqlDB(config.MySqlConnectionString)
@@ -60,22 +63,18 @@ func main() {
 		if err != nil {
 			exitWithError(err, "failed to initialise MySQL database")
 		}
-		consoleLogger.Log("Connected to MySQL")
+		logger.Log("Connected to MySQL")
 		linkRepo = repos.NewLinkMySqlRepo(db)
-	}
-	if config.LinkIDLength == 0 {
-		exitWithError(nil, "invalid link ID length")
 	}
 	webUIFileSystem, err := fs.Sub(embeddedWebUIFileSystem, "web/out")
 	if err != nil {
 		exitWithError(err, "failed to read embedded web UI filesystem")
 	}
-	httpFileSystem := data.NewHttpFileSystem(http.FS(webUIFileSystem))
 	infoService := services.NewInfoService(config.PageFooterText)
 	linkService := services.NewLinkService(linkRepo, config.LinkIDLength)
-	webUIController := controllers.NewWebUIController(consoleLogger, httpFileSystem)
+	webUIController := controllers.NewWebUIController(logger, http.FS(webUIFileSystem))
 	infoController := controllers.NewInfoController(infoService)
-	linkController := controllers.NewLinkController(consoleLogger, linkService)
+	linkController := controllers.NewLinkController(logger, linkService)
 	webUIRouter := routers.NewWebUIRouter(webUIController)
 	apiRouter := routers.NewApiRouter(infoController, linkController)
 	rootRouter := routers.NewRootRouter(webUIRouter, apiRouter)
@@ -89,8 +88,8 @@ func main() {
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt)
 	<-sig
-	consoleLogger.Log("Received interrupt signal")
-	consoleLogger.Log("Exiting")
+	logger.Log("Received interrupt signal")
+	logger.Log("Exiting")
 }
 
 func exitWithError(err error, message string) {
@@ -100,7 +99,7 @@ func exitWithError(err error, message string) {
 	} else {
 		errToLog = fmt.Errorf("%s: %w", message, err)
 	}
-	consoleLogger.LogError(errToLog, "main")
+	logger.LogError(errToLog, "main")
 	os.Exit(1)
 }
 

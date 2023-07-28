@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 				<meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
 				<meta content="website" property="og:type" />
 				<meta content="Slimlink" property="og:site_name" />
-				{/* <meta content="https://slimlink.vercel.app/" property="og:url" /> */}
+				{/* <meta content="https://l.shjm.in" property="og:url" /> */}
 				<meta content="https://raw.githubusercontent.com/shibijm/slimlink/master/web/public/static/media/logo.png" property="og:image" />
 				<meta content="Logo" name="og:image:alt" />
 				<meta content="summary" name="twitter:card" />

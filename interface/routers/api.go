@@ -15,17 +15,25 @@ func NewApiRouter(infoController *controllers.InfoController, linkController *co
 	return &ApiRouter{infoController, linkController}
 }
 
-func (apiRouter *ApiRouter) Route(w http.ResponseWriter, r *http.Request) {
+func (rt *ApiRouter) Route(w http.ResponseWriter, r *http.Request) {
 	urlPathSplit := strings.Split(r.URL.Path, "/")[1:]
 	n := len(urlPathSplit)
 	if n > 1 {
+		if urlPathSplit[1] == "info" {
+			if r.Method != http.MethodGet {
+				w.WriteHeader(http.StatusMethodNotAllowed)
+				return
+			}
+			rt.infoController.GetInfo(w, r)
+			return
+		}
 		if urlPathSplit[1] == "links" {
 			if n == 2 {
 				if r.Method != http.MethodPost {
 					w.WriteHeader(http.StatusMethodNotAllowed)
 					return
 				}
-				apiRouter.linkController.AddLink(w, r)
+				rt.linkController.AddLink(w, r)
 				return
 			}
 			if n == 3 {
@@ -33,7 +41,7 @@ func (apiRouter *ApiRouter) Route(w http.ResponseWriter, r *http.Request) {
 					w.WriteHeader(http.StatusMethodNotAllowed)
 					return
 				}
-				apiRouter.linkController.GetLink(w, r)
+				rt.linkController.GetLink(w, r)
 				return
 			}
 			if n == 4 && urlPathSplit[3] == "redirect" {
@@ -41,17 +49,9 @@ func (apiRouter *ApiRouter) Route(w http.ResponseWriter, r *http.Request) {
 					w.WriteHeader(http.StatusMethodNotAllowed)
 					return
 				}
-				apiRouter.linkController.RedirectToLinkUrl(w, r)
+				rt.linkController.RedirectToLinkUrl(w, r)
 				return
 			}
-		}
-		if urlPathSplit[1] == "info" {
-			if r.Method != http.MethodGet {
-				w.WriteHeader(http.StatusMethodNotAllowed)
-				return
-			}
-			apiRouter.infoController.GetInfo(w, r)
-			return
 		}
 	}
 	w.WriteHeader(http.StatusNotFound)

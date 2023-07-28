@@ -14,7 +14,7 @@ func NewRootRouter(webUIRouter *WebUIRouter, apiRouter *ApiRouter) *RootRouter {
 	return &RootRouter{webUIRouter, apiRouter}
 }
 
-func (rootRouter *RootRouter) Route(w http.ResponseWriter, r *http.Request) {
+func (rt *RootRouter) Route(w http.ResponseWriter, r *http.Request) {
 	if !strings.HasPrefix(r.URL.Path, "/") {
 		r.URL.Path = "/" + r.URL.Path
 	}
@@ -28,12 +28,12 @@ func (rootRouter *RootRouter) Route(w http.ResponseWriter, r *http.Request) {
 	urlPathSplit := strings.Split(r.URL.Path, "/")[1:]
 	urlPreRouting := r.URL.Path
 	if urlPathSplit[0] == "api" {
-		rootRouter.apiRouter.Route(w, r)
+		rt.apiRouter.Route(w, r)
 	} else {
-		rootRouter.webUIRouter.Route(w, r)
+		rt.webUIRouter.Route(w, r)
 	}
 	urlPostRouting := r.URL.Path
 	if urlPreRouting != urlPostRouting {
-		rootRouter.Route(w, r)
+		rt.Route(w, r)
 	}
 }

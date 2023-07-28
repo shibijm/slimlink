@@ -12,7 +12,7 @@ interface ResultAlertProps {
 
 export default function ResultAlert({ showResultAlert, setShowResultAlert, lastUrl, shortenedUrl, error }: ResultAlertProps): JSX.Element {
 	const [copyButtonLabel, setCopyButtonLabel] = useState("Copy");
-	const copyButtonLabelTimeout = useRef<NodeJS.Timeout | null>(null);
+	const timeoutID = useRef(0);
 
 	return (
 		<Collapse
@@ -45,11 +45,11 @@ export default function ResultAlert({ showResultAlert, setShowResultAlert, lastU
 								onClick={(): void => {
 									navigator.clipboard.writeText(shortenedUrl);
 									setCopyButtonLabel("Copied");
-									if (copyButtonLabelTimeout.current !== null) {
-										clearTimeout(copyButtonLabelTimeout.current);
+									if (timeoutID.current) {
+										window.clearTimeout(timeoutID.current);
 									}
-									copyButtonLabelTimeout.current = setTimeout(() => {
-										copyButtonLabelTimeout.current = null;
+									timeoutID.current = window.setTimeout(() => {
+										timeoutID.current = 0;
 										setCopyButtonLabel("Copy");
 									}, 1000);
 								}}

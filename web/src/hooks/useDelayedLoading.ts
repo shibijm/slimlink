@@ -5,16 +5,16 @@ export default function useDelayedLoading(
 	initialLoading = true,
 	delay = 100,
 ): { loading: boolean; showLoading: boolean; setLoading: (loading: boolean) => void } {
-	const loadingTimeout = useRef<NodeJS.Timeout | null>(null);
+	const timeoutID = useRef(0);
 	const [loading, setLoading] = useState(initialLoading);
 	const [showLoading, setShowLoading] = useState(false);
 
 	function setLoadingTimeout(): void {
-		if (loadingTimeout.current !== null) {
-			clearTimeout(loadingTimeout.current);
+		if (timeoutID.current) {
+			window.clearTimeout(timeoutID.current);
 		}
-		loadingTimeout.current = setTimeout(() => {
-			loadingTimeout.current = null;
+		timeoutID.current = window.setTimeout(() => {
+			timeoutID.current = 0;
 			setShowLoading(true);
 		}, delay);
 	}
@@ -24,8 +24,8 @@ export default function useDelayedLoading(
 			setLoadingTimeout();
 		}
 		return () => {
-			if (loadingTimeout.current !== null) {
-				clearTimeout(loadingTimeout.current);
+			if (timeoutID.current) {
+				window.clearTimeout(timeoutID.current);
 			}
 		};
 	});
@@ -35,9 +35,9 @@ export default function useDelayedLoading(
 			setLoading(true);
 			setLoadingTimeout();
 		} else {
-			if (loadingTimeout.current !== null) {
-				clearTimeout(loadingTimeout.current);
-				loadingTimeout.current = null;
+			if (timeoutID.current) {
+				window.clearTimeout(timeoutID.current);
+				timeoutID.current = 0;
 			}
 			setLoading(false);
 			setShowLoading(false);

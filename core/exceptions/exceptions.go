@@ -27,7 +27,7 @@ type UnexpectedError struct {
 }
 
 type appErrorType interface {
-	error
+	Error() string
 	setMessage(string)
 	*BadRequestError | *NotFoundError | *UnexpectedError
 }

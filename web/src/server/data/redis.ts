@@ -8,7 +8,7 @@ export async function getRedisKey(key: string): Promise<string> {
 		await client.connect();
 	}
 	const value = await client.get(key);
-	if (value === null) {
+	if (!value) {
 		throw new NotFoundError("Link not found");
 	}
 	return value;

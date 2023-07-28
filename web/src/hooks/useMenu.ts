@@ -16,5 +16,5 @@ export default function useMenu(): {
 		setAnchorElement(null);
 	}
 
-	return { isOpen: anchorElement !== null, anchorElement, handleOpen, handleClose };
+	return { isOpen: !!anchorElement, anchorElement, handleOpen, handleClose };
 }
