@@ -4,7 +4,7 @@ import (
 	"slimlink/core/entities"
 	"slimlink/core/exceptions"
 	"slimlink/core/ports"
-	"slimlink/core/utils"
+	"slimlink/utils"
 )
 
 type linkService struct {

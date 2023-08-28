@@ -36,8 +36,6 @@ const themes = {
 
 const links = {
 	GitHub: "https://github.com/shibijm/slimlink",
-	Copyright: "/static/copyright.txt",
-	License: "/static/license.txt",
 	"Third-Party Notices": "/static/notice.txt",
 };
 

@@ -1,3 +1,3 @@
 package config
 
-var Version string = "1.4.2"
+const Version = "1.4.3"
