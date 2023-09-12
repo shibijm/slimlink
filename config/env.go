@@ -18,7 +18,7 @@ func LoadFromEnv() {
 	godotenv.Load()
 	BindAddress = os.Getenv("BIND_ADDRESS")
 	if BindAddress == "" {
-		BindAddress = "127.0.0.1"
+		BindAddress = "0.0.0.0"
 	}
 	BindPort = os.Getenv("BIND_PORT")
 	if BindPort == "" {
