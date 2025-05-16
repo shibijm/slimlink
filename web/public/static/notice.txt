@@ -3,6 +3,21 @@ The original copyright notices and the licenses under which such
 components were received are set forth below.
 
 ----------------------------------------------------------------------
+Link icon
+----------------------------------------------------------------------
+
+Used as application icon
+
+Title: Link
+
+Author: Guapoo
+
+Source: https://www.reshot.com/free-svg-icons/item/link-JXNSB8UCPE/
+
+License: Reshot Stock Icon Free License
+https://www.reshot.com/license/
+
+----------------------------------------------------------------------
 Go
 https://github.com/golang/go
 ----------------------------------------------------------------------
