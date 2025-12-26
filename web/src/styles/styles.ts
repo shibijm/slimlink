@@ -1,6 +1,9 @@
-import { experimental_extendTheme as extendTheme } from "@mui/material";
+import { createTheme } from "@mui/material";
 
-export const defaultTheme = extendTheme({
+export const defaultTheme = createTheme({
+	colorSchemes: {
+		dark: true,
+	},
 	typography: {
 		fontFamily: "Inter, Roboto, 'Segoe UI', Arial, sans-serif",
 	},

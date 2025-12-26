@@ -4,11 +4,11 @@ interface ControlledInput {
 	bind: {
 		value: string;
 		onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-		inputRef: React.MutableRefObject<HTMLInputElement | null>;
+		inputRef: React.RefObject<HTMLInputElement | null>;
 	};
 	value: string;
 	setValue: (value: string) => void;
-	ref: React.MutableRefObject<HTMLInputElement | null>;
+	ref: React.RefObject<HTMLInputElement | null>;
 	focus: () => void;
 	blur: () => void;
 }
@@ -53,7 +53,9 @@ export function useControlledInputs<T extends Values>(initialValues: T): Control
 	return Object.entries(values).reduce(
 		(controlledInputs, [key, value]) => ({
 			...controlledInputs,
-			[key]: composeControlledInput(value, (value) => dispatch([key, value])),
+			[key]: composeControlledInput(value, (value) => {
+				dispatch([key, value]);
+			}),
 		}),
 		{} as ControlledInputs<T>,
 	);

@@ -15,14 +15,14 @@ async function apiRequest<T>(method: string, endpoint: string, json?: unknown): 
 	}
 	let response!: T;
 	try {
-		response = await fetchResponse.json();
+		response = (await fetchResponse.json()) as T;
 	} catch {
 		if (fetchResponse.ok) {
 			throw new Error("JSON parse failure");
 		}
 	}
 	if (!fetchResponse.ok) {
-		throw new Error(`HTTP ${fetchResponse.status}`);
+		throw new Error(`HTTP ${fetchResponse.status.toString()}`);
 	}
 	return response;
 }

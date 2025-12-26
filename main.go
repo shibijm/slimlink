@@ -20,7 +20,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-//go:embed all:web/out
+//go:embed all:web/dist
 var embeddedWebUIFileSystem embed.FS
 var logger ports.Logger
 
@@ -66,7 +66,7 @@ func main() {
 		logger.Log("Connected to MySQL")
 		linkRepo = repos.NewLinkMySqlRepo(db)
 	}
-	webUIFileSystem, err := fs.Sub(embeddedWebUIFileSystem, "web/out")
+	webUIFileSystem, err := fs.Sub(embeddedWebUIFileSystem, "web/dist")
 	if err != nil {
 		exitWithError(err, "failed to read embedded web UI filesystem")
 	}

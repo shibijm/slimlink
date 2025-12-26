@@ -1,3 +1,5 @@
+import { version } from "@/config";
+import { useMenu, useModal } from "@/hooks";
 import BrightnessMediumIcon from "@mui/icons-material/BrightnessMedium";
 import CheckIcon from "@mui/icons-material/Check";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
@@ -23,9 +25,6 @@ import {
 	Typography,
 	useColorScheme,
 } from "@mui/material";
-import { Mode } from "@mui/system/cssVars/useCurrentColorScheme";
-import { version } from "config";
-import { useMenu, useModal, useMountStatus } from "hooks";
 import { Fragment } from "react";
 
 const themes = {
@@ -39,10 +38,9 @@ const links = {
 	"Third-Party Notices": "/static/notice.txt",
 };
 
-export default function PageMenu(): JSX.Element | null {
+export default function PageMenu() {
 	const pageMenu = useMenu();
 	const aboutDialog = useModal();
-	const isMounted = useMountStatus();
 	const { mode, setMode } = useColorScheme();
 
 	return (
@@ -61,24 +59,22 @@ export default function PageMenu(): JSX.Element | null {
 					</IconButton>
 				</Tooltip>
 			</Fade>
-			<Menu MenuListProps={{ sx: { width: "220px" } }} anchorEl={pageMenu.anchorElement} onClose={pageMenu.handleClose} open={pageMenu.isOpen}>
-				{isMounted && (
-					<Fragment>
-						{Object.entries(themes).map(([theme, { label, icon }]) => (
-							<MenuItem
-								key={theme}
-								onClick={(): void => {
-									setMode(theme as Mode);
-								}}
-							>
-								<ListItemIcon>{icon}</ListItemIcon>
-								<ListItemText>{label}</ListItemText>
-								{mode === theme && <CheckIcon color="primary" />}
-							</MenuItem>
-						))}
-						<Divider />
-					</Fragment>
-				)}
+			<Menu anchorEl={pageMenu.anchorElement} onClose={pageMenu.handleClose} open={pageMenu.isOpen} slotProps={{ list: { sx: { width: "220px" } } }}>
+				<Fragment>
+					{Object.entries(themes).map(([theme, { label, icon }]) => (
+						<MenuItem
+							key={theme}
+							onClick={(): void => {
+								setMode(theme as "system" | "light" | "dark");
+							}}
+						>
+							<ListItemIcon>{icon}</ListItemIcon>
+							<ListItemText>{label}</ListItemText>
+							{mode === theme && <CheckIcon color="primary" />}
+						</MenuItem>
+					))}
+					<Divider />
+				</Fragment>
 				<MenuItem
 					onClick={(): void => {
 						aboutDialog.handleOpen();

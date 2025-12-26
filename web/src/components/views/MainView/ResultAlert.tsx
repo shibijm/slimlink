@@ -10,7 +10,7 @@ interface ResultAlertProps {
 	error: string;
 }
 
-export default function ResultAlert({ showResultAlert, setShowResultAlert, lastUrl, shortenedUrl, error }: ResultAlertProps): JSX.Element {
+export default function ResultAlert({ showResultAlert, setShowResultAlert, lastUrl, shortenedUrl, error }: ResultAlertProps) {
 	const [copyButtonLabel, setCopyButtonLabel] = useState("Copy");
 	const timeoutID = useRef(0);
 
@@ -43,7 +43,7 @@ export default function ResultAlert({ showResultAlert, setShowResultAlert, lastU
 							</Link>
 							<Button
 								onClick={(): void => {
-									navigator.clipboard.writeText(shortenedUrl);
+									void navigator.clipboard.writeText(shortenedUrl);
 									setCopyButtonLabel("Copied");
 									if (timeoutID.current) {
 										window.clearTimeout(timeoutID.current);

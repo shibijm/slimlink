@@ -1,16 +1,16 @@
+import { useMountEffect } from "@/hooks";
+import { getInfo } from "@/services/info";
+import type { Info } from "@/types";
 import { Fade, Typography } from "@mui/material";
-import { useMountEffect } from "hooks";
 import { useState } from "react";
-import { getInfo } from "services/info";
-import { Info } from "types";
 
-export default function PageFooter(): JSX.Element | null {
+export default function PageFooter() {
 	const [info, setInfo] = useState<Info>();
 
 	useMountEffect(() => {
 		getInfo()
 			.then(setInfo)
-			.catch((error) => {
+			.catch((error: Error) => {
 				setInfo({ pageFooterText: `Failed to fetch info - ${error.message}` });
 			});
 	});

@@ -1,8 +1,14 @@
-build:
-	npm i
-	$(eval export NEXT_TELEMETRY_DISABLED = 1)
+build: install lint
 	npm run build
-	npm run export
+
+install:
+	npm install
 
 clean:
-	rm -rf .next node_modules out
+	rm -rf node_modules dist
+
+lint:
+	npm run lint
+
+dev:
+	npm run dev
