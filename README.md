@@ -28,8 +28,8 @@ services:
     container_name: slimlink
     image: ghcr.io/shibijm/slimlink:latest
     restart: unless-stopped
-  ports:
-    - 127.0.0.1:44558:44558
+    ports:
+      - 127.0.0.1:44558:44558
 ```
 
 ## Configuration - Environment Variables
