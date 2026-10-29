@@ -4,11 +4,6 @@ Slimlink is a simple and lightweight web service for shortening URLs.
 
 [![Latest Release](https://img.shields.io/github/v/release/shibijm/slimlink?label=Latest%20Release)](https://github.com/shibijm/slimlink/releases/latest)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/shibijm/slimlink/release.yml?label=Build&logo=github)](https://github.com/shibijm/slimlink/actions/workflows/release.yml)
-[![Demo Deployment Status](https://img.shields.io/website/https/l.shjm.in?label=Demo%20Deployment)](https://l.shjm.in)
-
-## Demo
-
-A public demo instance is hosted at [l.shjm.in](https://l.shjm.in).
 
 ## Download
 
